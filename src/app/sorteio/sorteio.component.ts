@@ -57,10 +57,10 @@ export class SorteioComponent {
       url: 'https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send',
       headers: {
         'content-type': 'application/json',
-        'X-RapidAPI-Key': `'${environment.API_KEY}'`,
-        'X-RapidAPI-Host': 'rapidprod-sendgrid-v1.p.rapidapi.com'
+        'X-RapidAPI-Key': `${environment.API_KEY}`,
+        'X-RapidAPI-Host': 'rapidprod-sendgrid-v1.p.rapidapi.com',
       },
-      data: `{"personalizations":[{"to":[{"email":"${person._email}"}],"subject":"Hello, World!"}],"from":{"email":"${environment.EMAIL_HOST}"},"content":[{"type":"text/plain","value":"${text}"}]}`
+      data: `{"personalizations":[{"to":[{"email":"${person._email}"}],"subject":"AMIGO SECRETO!"}],"from":{"email":"${environment.EMAIL_HOST}"},"content":[{"type":"text/plain","value":"${text}"}]}`
     };
     
     axios.request(options).then(function (response: any) {
@@ -68,5 +68,9 @@ export class SorteioComponent {
     }).catch(function (error: any) {
       console.error(error);
     });
+  }
+
+  cleanStorage(){
+    this.people = [];
   }
 }
