@@ -10,7 +10,7 @@ import { PersonService } from '../person.service';
 })
 export class SorteioComponent {
   people: PersonService[] = [];
-  peopleAlreadyChoice: string[] = [];
+  sortType: string = 'Amigo Secreto';
   showQuantityError: boolean = false;
   showEmptyError: boolean = false;
   checkoutForm = this.formBuilder.group({
@@ -31,6 +31,7 @@ export class SorteioComponent {
     this.checkoutForm.reset({ 'name': '', 'email': '' });
   }
   makeSortition() {
+    let peopleAlreadyChoice:string[] = [];
     if (this.people.length % 2 != 0) {
       this.showQuantityError = true;
       return;
@@ -39,19 +40,20 @@ export class SorteioComponent {
     for (let p of this.people) {
       while (true) {
         var personChoice: number = Math.floor(Math.random() * this.people.length);
-        if (!(this.peopleAlreadyChoice.includes(this.people[personChoice]._name)) && p._name !== this.people[personChoice]._name)
+        if (!(peopleAlreadyChoice.includes(this.people[personChoice]._name)) && p._name !== this.people[personChoice]._name)
           break;
       }
       p._choiced = this.people[personChoice]._name;
-      this.peopleAlreadyChoice.push(this.people[personChoice]._name);
-      console.log(p._name, 'vai presentear', p._choiced);
+      peopleAlreadyChoice.push(this.people[personChoice]._name);
+      // console.log(p._name, 'vai presentear', p._choiced);
       this.sendEmail(p);
+      
     }
   }
 
   sendEmail(person: PersonService) {
     const axios = require("axios");
-    const text:string = "Olá " + person._name + ", você tirou " + person._choiced + " para presentear no amigo secréto. O evento acontecera dia 31/12, não vai se atrasar."
+    const text:string = "Olá " + person._name + ", você tirou " + person._choiced + " para presentear no " + this.sortType + ". O evento acontecera dia 31/12, e não se preocupe com valor, o objetivo é ser algo simbólico, não gaste muito (max 50 reias). Não vai se atrasar."
     const options = {
       method: 'POST',
       url: 'https://rapidprod-sendgrid-v1.p.rapidapi.com/mail/send',
@@ -60,7 +62,7 @@ export class SorteioComponent {
         'X-RapidAPI-Key': `${environment.API_KEY}`,
         'X-RapidAPI-Host': 'rapidprod-sendgrid-v1.p.rapidapi.com',
       },
-      data: `{"personalizations":[{"to":[{"email":"${person._email}"}],"subject":"AMIGO SECRETO!"}],"from":{"email":"${environment.EMAIL_HOST}"},"content":[{"type":"text/plain","value":"${text}"}]}`
+      data: `{"personalizations":[{"to":[{"email":"${person._email}"}],"subject":"${this.sortType.toUpperCase()}!"}],"from":{"email":"${environment.EMAIL_HOST}"},"content":[{"type":"text/plain","value":"${text}"}]}`
     };
     
     axios.request(options).then(function (response: any) {
@@ -72,5 +74,12 @@ export class SorteioComponent {
 
   cleanStorage(){
     this.people = [];
+  }
+
+  change(){
+    if(this.sortType === 'Amigo Secreto')
+      this.sortType = 'Amigo da onça';
+    else
+      this.sortType = 'Amigo Secreto';
   }
 }

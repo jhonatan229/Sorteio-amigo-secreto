@@ -2,6 +2,9 @@
   <h1>
       Hora do sorteio
   </h1>
+  <div>
+    <button type="button" class="btn btn-primary" (click)="change()">{{sortType}}</button>
+  </div>
   <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
           <label for="exampleInputPassword1">Name</label>
